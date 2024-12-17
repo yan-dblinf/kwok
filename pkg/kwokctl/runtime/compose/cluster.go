@@ -373,6 +373,7 @@ func (c *Cluster) addEtcd(ctx context.Context, env *env) (err error) {
 		Version:     etcdVersion,
 		BindAddress: net.PublicAddress,
 		Port:        conf.EtcdPort,
+                PeerPort:    conf.EtcdPeerPort,
 		DataPath:    env.etcdDataPath,
 		Verbosity:   env.verbosity,
 	})
