@@ -56,6 +56,7 @@ func NewCommand(ctx context.Context) *cobra.Command {
 
 	cmd.PersistentFlags().StringVar(&config.DefaultCluster, "name", config.DefaultCluster, "cluster name")
 	cmd.PersistentFlags().BoolVar(&dryrun.DryRun, "dry-run", dryrun.DryRun, "Print the command that would be executed, but do not execute it")
+	cmd.PersistentFlags().BoolVar(&dryrun.ForceDownload, "force-download", dryrun.ForceDownload, "Download binaries if not exists regardless of dry-run mode")
 	cmd.TraverseChildren = true
 
 	cmd.AddCommand(

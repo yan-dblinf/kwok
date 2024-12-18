@@ -29,6 +29,9 @@ var stdout = os.Stdout
 // DryRun is a flag to indicate whether the program is running in dry-run mode.
 var DryRun bool
 
+// ForceDownload is a flag to indicate if the program should download binaries if not exists regardless of dry-run mode.
+var ForceDownload bool
+
 // PrintMessage prints the message to stdout.
 func PrintMessage(format string, a ...any) {
 	_, _ = fmt.Fprintf(stdout, format+"\n", a...)

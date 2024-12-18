@@ -31,18 +31,18 @@ import (
 // DownloadWithCache downloads the src file to the dest file.
 func (c *Cluster) DownloadWithCache(ctx context.Context, cacheDir, src, dest string, mode fs.FileMode, quiet bool) error {
 	if s := strings.SplitN(src, "#", 2); len(s) == 2 {
-		if c.IsDryRun() {
+		if c.IsDryRun() && !c.ShouldDownload() {
 			dryrun.PrintMessage("# Download %s and extract %s to %s", s[0], s[1], dest)
 			return nil
 		}
-		return file.DownloadWithCacheAndExtract(ctx, cacheDir, s[0], dest, s[1], mode, quiet, true)
+		return file.DownloadWithCacheAndExtract(ctx, cacheDir, s[0], dest, s[1], mode, quiet, true, c.IsDryRun())
 	}
 
-	if c.IsDryRun() {
+	if c.IsDryRun() && !c.ShouldDownload() {
 		dryrun.PrintMessage("# Download %s to %s", src, dest)
 		return nil
 	}
-	return file.DownloadWithCache(ctx, cacheDir, src, dest, mode, quiet)
+	return file.DownloadWithCache(ctx, cacheDir, src, dest, mode, quiet, c.IsDryRun())
 }
 
 // GeneratePki generates the pki for kwokctl

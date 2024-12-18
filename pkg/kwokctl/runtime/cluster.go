@@ -66,10 +66,11 @@ var (
 
 // Cluster is the cluster
 type Cluster struct {
-	workdir string
-	name    string
-	dryRun  bool
-	conf    *internalversion.KwokctlConfiguration
+	workdir       string
+	name          string
+	dryRun        bool
+	forceDownload bool
+	conf          *internalversion.KwokctlConfiguration
 
 	clientset client.Clientset
 }
@@ -77,9 +78,10 @@ type Cluster struct {
 // NewCluster creates a new cluster
 func NewCluster(name, workdir string) *Cluster {
 	return &Cluster{
-		name:    name,
-		workdir: workdir,
-		dryRun:  dryrun.DryRun,
+		name:          name,
+		workdir:       workdir,
+		dryRun:        dryrun.DryRun,
+		forceDownload: dryrun.ForceDownload,
 	}
 }
 
@@ -532,6 +534,11 @@ func (c *Cluster) GetClientset(ctx context.Context) (client.Clientset, error) {
 // IsDryRun returns true if the runtime is in dry-run mode
 func (c *Cluster) IsDryRun() bool {
 	return c.dryRun
+}
+
+// returns true if the runtime should download regardless of dry-run mode
+func (c *Cluster) ShouldDownload() bool {
+	return c.forceDownload
 }
 
 // InitCRDs initializes the CRDs.

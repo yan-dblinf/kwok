@@ -37,7 +37,7 @@ import (
 )
 
 // DownloadWithCacheAndExtract downloads the src file to the dest file, and extract it to the dest directory.
-func DownloadWithCacheAndExtract(ctx context.Context, cacheDir, src, dest string, match string, mode fs.FileMode, quiet bool, clean bool) error {
+func DownloadWithCacheAndExtract(ctx context.Context, cacheDir, src, dest string, match string, mode fs.FileMode, quiet bool, clean bool, dryRun bool) error {
 	if _, err := os.Stat(dest); err == nil {
 		return nil
 	}
@@ -73,6 +73,10 @@ func DownloadWithCacheAndExtract(ctx context.Context, cacheDir, src, dest string
 		}
 	}
 
+	if dryRun {
+		return nil
+	}
+
 	err = MkdirAll(path.Dir(dest))
 	if err != nil {
 		return err
@@ -87,7 +91,7 @@ func DownloadWithCacheAndExtract(ctx context.Context, cacheDir, src, dest string
 }
 
 // DownloadWithCache downloads the src file to the dest file.
-func DownloadWithCache(ctx context.Context, cacheDir, src, dest string, mode fs.FileMode, quiet bool) error {
+func DownloadWithCache(ctx context.Context, cacheDir, src, dest string, mode fs.FileMode, quiet bool, dryRun bool) error {
 	if _, err := os.Stat(dest); err == nil {
 		return nil
 	}
@@ -95,6 +99,10 @@ func DownloadWithCache(ctx context.Context, cacheDir, src, dest string, mode fs.
 	cache, err := getCacheOrDownload(ctx, cacheDir, src, mode, quiet)
 	if err != nil {
 		return err
+	}
+
+	if dryRun {
+		return nil
 	}
 
 	err = os.MkdirAll(filepath.Dir(dest), 0750)
